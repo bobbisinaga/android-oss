@@ -59,8 +59,10 @@ public class CreatorDashboardViewModelTest extends KSRobolectricTestCase {
 
   @Test
   public void testProjectAndStats() {
+    final Project projectOne = ProjectFactory.project();
+    final Project projectTwo = ProjectFactory.project();
     final List<Project> projects = Arrays.asList(
-      ProjectFactory.project()
+      projectOne, projectTwo
     );
 
     final ProjectStatsEnvelope ProjectStatsEnvelope = ProjectStatsEnvelopeFactory.ProjectStatsEnvelope();
@@ -77,6 +79,10 @@ public class CreatorDashboardViewModelTest extends KSRobolectricTestCase {
     setUpEnvironment(environment().toBuilder().apiClient(apiClient).build());
     final Pair<Project, ProjectStatsEnvelope> outputPair = Pair.create(ListUtils.first(projects), ProjectStatsEnvelope);
     this.projectAndStats.assertValues(outputPair);
+
+    ///simulate project switcher click
+    this.vm.inputs.projectSwitcherProjectClickInput(projectTwo);
+    this.projectSwitcherProjectClickOutput.assertValue(projectTwo);
   }
 
   @Test

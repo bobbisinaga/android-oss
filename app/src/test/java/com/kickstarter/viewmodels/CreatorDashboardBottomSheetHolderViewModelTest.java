@@ -15,10 +15,12 @@ public class CreatorDashboardBottomSheetHolderViewModelTest extends KSRobolectri
   private CreatorDashboardBottomSheetHolderViewModel.ViewModel vm;
 
   private final TestSubscriber<String> projectName = new TestSubscriber<>();
+  private final TestSubscriber<Project> projectSwitcherProject = new TestSubscriber<>();
 
   private void setUpEnvironment(final @NonNull Environment environment) {
     this.vm = new CreatorDashboardBottomSheetHolderViewModel.ViewModel(environment);
     this.vm.outputs.projectNameText().subscribe(this.projectName);
+    this.vm.outputs.projectSwitcherProject().subscribe(projectSwitcherProject);
   }
 
   @Test
@@ -28,5 +30,15 @@ public class CreatorDashboardBottomSheetHolderViewModelTest extends KSRobolectri
 
     this.vm.inputs.projectInput(project);
     this.projectName.assertValues(project.name());
+  }
+
+  @Test
+  public void testProjectSwitcherProject() {
+    final Project project = ProjectFactory.project();
+    setUpEnvironment(environment());
+
+    this.vm.inputs.projectInput(project);
+    this.vm.inputs.projectSwitcherProjectClicked();
+    this.projectSwitcherProject.assertValue(project);
   }
 }
