@@ -30,7 +30,6 @@ public interface CreatorDashboardViewModel {
   interface Inputs extends CreatorDashboardBottomSheetAdapter.Delegate {
     void projectViewClicked();
     void projectSwitcherProjectClickInput(Project project);
-    void refreshProject(Project project);
   }
 
   interface Outputs {
@@ -39,9 +38,6 @@ public interface CreatorDashboardViewModel {
 
     /* emits when project dropdown should be shown */
     Observable<List<Project>> projectsForBottomSheet();
-
-    /* emits when a project is clicked in the project switcher */
-    Observable<Project> projectSwitcherProjectClickOutput();
 
     /* call when button is clicked to view individual project page */
     Observable<Pair<Project, RefTag>> startProjectActivity();
@@ -76,9 +72,8 @@ public interface CreatorDashboardViewModel {
       projects.map(ListUtils::first).subscribe(this.currentProject::onNext);
 
       this.projectAndStats = this.currentProject
-        .compose(combineLatestPair(projectStatsEnvelope));
-
-      this.projectSwitcherProjectClickOutput = this.projectSwitcherClicked;
+        .compose(combineLatestPair(projectStatsEnvelope))
+        .distinctUntilChanged();
 
       this.startProjectActivity = this.currentProject
         .compose(takeWhen(this.projectViewClicked))
@@ -86,12 +81,10 @@ public interface CreatorDashboardViewModel {
     }
 
     private final PublishSubject<Void> projectViewClicked = PublishSubject.create();
-    private final PublishSubject<Project> projectSwitcherClicked = PublishSubject.create();
     private final BehaviorSubject<Project> currentProject = BehaviorSubject.create();
 
     private final Observable<Pair<Project, ProjectStatsEnvelope>> projectAndStats;
     private final Observable<List<Project>> projectsForBottomSheet;
-    private final Observable<Project> projectSwitcherProjectClickOutput;
     private final Observable<Pair<Project, RefTag>> startProjectActivity;
 
     public final Inputs inputs = this;
@@ -104,11 +97,6 @@ public interface CreatorDashboardViewModel {
 
     @Override
     public void projectSwitcherProjectClickInput(final @NonNull Project project) {
-      this.projectSwitcherClicked.onNext(project);
-    }
-
-    @Override
-    public void refreshProject(final @NonNull Project project) {
       this.currentProject.onNext(project);
     }
 
@@ -117,9 +105,6 @@ public interface CreatorDashboardViewModel {
     }
     @Override public @NonNull Observable<List<Project>> projectsForBottomSheet() {
       return this.projectsForBottomSheet;
-    }
-    @Override public @NonNull Observable<Project> projectSwitcherProjectClickOutput() {
-      return this.projectSwitcherProjectClickOutput;
     }
     @Override public @NonNull Observable<Pair<Project, RefTag>> startProjectActivity() {
       return this.startProjectActivity;

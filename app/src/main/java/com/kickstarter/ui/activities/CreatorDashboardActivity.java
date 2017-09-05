@@ -51,23 +51,22 @@ public final class CreatorDashboardActivity extends BaseActivity<CreatorDashboar
       .compose(observeForUI())
       .subscribe(this::createProjectDashboardFragment);
 
+    this.viewModel.outputs.projectAndStats()
+      .compose(bindToLifecycle())
+      .compose(observeForUI())
+      .subscribe(__ -> this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED));
+
     this.viewModel.outputs.projectsForBottomSheet()
       .compose(bindToLifecycle())
       .compose(observeForUI())
       .subscribe(this::setProjectsForDropdown);
-
-    this.viewModel.outputs.projectSwitcherProjectClickOutput()
-       .compose(bindToLifecycle())
-      .compose(observeForUI())
-      .subscribe(this::projectSwitcherProjectClicked);
   }
 
   private void setProjectsForDropdown(final @NonNull List<Project> projects) {
     this.bottomSheetAdapter.takeProjects(projects);
   }
 
-  private void projectSwitcherProjectClicked(final @NonNull Project project) {
-    this.viewModel.refreshProject(project);
+  private void collapseBottomSheet() {
     this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
   }
 
