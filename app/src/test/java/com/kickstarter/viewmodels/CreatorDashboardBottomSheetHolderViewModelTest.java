@@ -20,7 +20,7 @@ public class CreatorDashboardBottomSheetHolderViewModelTest extends KSRobolectri
   private void setUpEnvironment(final @NonNull Environment environment) {
     this.vm = new CreatorDashboardBottomSheetHolderViewModel.ViewModel(environment);
     this.vm.outputs.projectNameText().subscribe(this.projectName);
-    this.vm.outputs.projectSwitcherProject().subscribe(projectSwitcherProject);
+    this.vm.outputs.projectSwitcherProject().subscribe(this.projectSwitcherProject);
   }
 
   @Test

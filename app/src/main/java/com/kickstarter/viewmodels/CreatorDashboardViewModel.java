@@ -63,7 +63,7 @@ public interface CreatorDashboardViewModel {
       final Observable<List<Project>> projects = projectsEnvelope
         .map(ProjectsEnvelope::projects);
 
-      final Observable<Notification<ProjectStatsEnvelope>> projectStatsEnvelopeNotification = currentProject
+      final Observable<Notification<ProjectStatsEnvelope>> projectStatsEnvelopeNotification = this.currentProject
         .switchMap(this.client::fetchProjectStats)
         .share()
         .materialize();
@@ -75,12 +75,12 @@ public interface CreatorDashboardViewModel {
 
       projects.map(ListUtils::first).subscribe(this.currentProject::onNext);
 
-      this.projectAndStats = currentProject
+      this.projectAndStats = this.currentProject
         .compose(combineLatestPair(projectStatsEnvelope));
 
       this.projectSwitcherProjectClickOutput = this.projectSwitcherClicked;
 
-      this.startProjectActivity = currentProject
+      this.startProjectActivity = this.currentProject
         .compose(takeWhen(this.projectViewClicked))
         .map(p -> Pair.create(p, RefTag.dashboard()));
     }
@@ -118,7 +118,9 @@ public interface CreatorDashboardViewModel {
     @Override public @NonNull Observable<List<Project>> projectsForBottomSheet() {
       return this.projectsForBottomSheet;
     }
-    @Override public @NonNull Observable<Project> projectSwitcherProjectClickOutput() { return this.projectSwitcherProjectClickOutput; }
+    @Override public @NonNull Observable<Project> projectSwitcherProjectClickOutput() {
+      return this.projectSwitcherProjectClickOutput;
+    }
     @Override public @NonNull Observable<Pair<Project, RefTag>> startProjectActivity() {
       return this.startProjectActivity;
     }
