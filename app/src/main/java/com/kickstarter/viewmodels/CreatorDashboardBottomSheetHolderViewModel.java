@@ -4,12 +4,13 @@ import android.support.annotation.NonNull;
 
 import com.kickstarter.libs.ActivityViewModel;
 import com.kickstarter.libs.Environment;
-import com.kickstarter.libs.rx.transformers.Transformers;
 import com.kickstarter.models.Project;
 import com.kickstarter.ui.viewholders.CreatorDashboardBottomSheetViewHolder;
 
 import rx.Observable;
 import rx.subjects.PublishSubject;
+
+import static com.kickstarter.libs.rx.transformers.Transformers.takeWhen;
 
 public interface CreatorDashboardBottomSheetHolderViewModel {
 
@@ -30,7 +31,7 @@ public interface CreatorDashboardBottomSheetHolderViewModel {
       this.projectNameText = this.currentProject.map(Project::name);
 
       this.projectSwitcherProject = this.currentProject
-        .compose(Transformers.takeWhen(this.projectSwitcherClicked));
+        .compose(takeWhen(this.projectSwitcherClicked));
     }
 
     public final Inputs inputs = this;

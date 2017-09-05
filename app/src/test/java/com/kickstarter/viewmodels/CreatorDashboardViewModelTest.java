@@ -59,8 +59,8 @@ public class CreatorDashboardViewModelTest extends KSRobolectricTestCase {
 
   @Test
   public void testProjectAndStats() {
-    final Project projectOne = ProjectFactory.project();
-    final Project projectTwo = ProjectFactory.project();
+    final Project projectOne = ProjectFactory.project().toBuilder().id(1).build();
+    final Project projectTwo = ProjectFactory.project().toBuilder().id(2).build();
     final List<Project> projects = Arrays.asList(
       projectOne, projectTwo
     );
